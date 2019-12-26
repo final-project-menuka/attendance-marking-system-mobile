@@ -7,25 +7,23 @@
  */
 
 import React from 'react';
-import {SafeAreaView, Text} from 'react-native';
-
-import {getMacAddress} from 'react-native-device-info';
+import { createStore } from 'redux';
+import MainNavigator from './src/screens/LoginScreen';
 
 function App() {
-  const [myMacAddress, setMyMacAddress] = React.useState(0);
-  const press = () => {
-    getMacAddress()
-      .then(macAddress => {
-        setMyMacAddress(macAddress);
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-  };
+  // const [myMacAddress, setMyMacAddress] = React.useState(0);
+  // const press = () => {
+  //   getMacAddress()
+  //     .then(macAddress => {
+  //       setMyMacAddress(macAddress);
+  //     })
+  //     .catch(err => {
+  //       alert(err.message);
+  //     });
+  // };
+  // eslint-disable-next-line prettier/prettier
   return (
-    <SafeAreaView>
-      <Text onPress={press}>{myMacAddress}</Text>
-    </SafeAreaView>
+    <MainNavigator/>
   );
 }
 
