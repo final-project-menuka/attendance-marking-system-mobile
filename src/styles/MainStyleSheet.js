@@ -24,6 +24,16 @@ const styles = StyleSheet.create({
     },
     height25: {
         height:Dimensions.get('screen').height /4
+    },
+    logoImage: {
+        height: Dimensions.get('screen').height / 10,
+        width: Dimensions.get('screen').height /10
+    },
+    textPrimary: {
+        color: PrimaryColor
+    },
+    bgWhite: {
+        backgroundColor:'white'
     }
 });
 

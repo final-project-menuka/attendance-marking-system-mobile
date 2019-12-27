@@ -1,12 +1,11 @@
 /* eslint-disable prettier/prettier */
-
-import React from 'react';
+import React from 'react'
 import styled from 'styled-components/native';
+import { AppFontSize, SecondaryColor } from '../constants/Values';
 import { Dimensions } from 'react-native';
-import { AppFontSize , PrimaryColor } from '../constants/Values';
 const StyledTouchableOpacity = styled.TouchableOpacity`
     height: ${props => props.height !== undefined ? props.height : Dimensions.get('screen').height / 20} ;
-    background-color: ${PrimaryColor};
+    background-color: ${SecondaryColor};
     width:${Dimensions.get('screen').width - 100};
     justify-content: center;
     align-items: center;
@@ -19,9 +18,10 @@ const ButtonText = styled.Text`
     font-weight: bold;
 `
 
-const PrimaryButton = props => (
+const SecondaryButton = props => (
     <StyledTouchableOpacity onPress={props.onPress} height={props.height} marginTop={props.marginTop}>
         <ButtonText>{props.text}</ButtonText>
     </StyledTouchableOpacity>
 );
-export default PrimaryButton;
+export default SecondaryButton;
+    
