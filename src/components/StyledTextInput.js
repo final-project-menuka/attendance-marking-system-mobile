@@ -12,15 +12,19 @@ const StyledTextArea = styled.TextInput`
     font-size: ${AppFontSize};
     margin-top: 8;
     font-weight:600;
+    border-width: ${props => props.transparent ? 1 : 0};
+    border-color: blue;
 `
 const StyledTextInput = props => (
     <StyledTextArea
         onTouchStart={props.onTouchStart}
         isRounded={props.isRounded}
         secureTextEntry={props.isPassword}
-        keyboardType={!props.KeyboardType ? 'default' : props.keyboardType}
+        keyboardType={props.KeyboardType === undefined? 'default' : props.keyboardType}
         autoCapitalize={props.isPassword || props.email ? 'none' : 'sentences'}
         placeholder={props.placeholder}
+        transparent={props.transparent}
+        onChangeText={props.onChangeText} 
     />
 );
 export default StyledTextInput;

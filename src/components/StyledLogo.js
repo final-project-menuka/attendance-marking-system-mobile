@@ -12,12 +12,10 @@ const StyledLogoContainer = styled.View`
 const StyledLogoImage = styled.Image`
     height: ${Dimensions.get('screen').height /5};
     width: ${Dimensions.get('screen').height / 5};
-    margin-bottom: ${Dimensions.get('screen').height / 100};
 `
 const StyledLogoText = styled.Text`
     font-family: Arial;
     font-size: 25px;
-    text-align: center;
     color: ${props => props.color};
     font-weight: bold;
 `

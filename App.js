@@ -8,18 +8,38 @@
  */
 
 import React from 'react';
-import { createStore,combineReducers } from 'redux';
+import { createStore,combineReducers, applyMiddleware } from 'redux';
 //import MainNavigator from './src/screens/LoginScreen';
 import {createAppContainer } from 'react-navigation';
 import LoginScreen from './src/screens/LoginScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import { createStackNavigator } from 'react-navigation-stack';
-import { reducerName } from './src/store/reducers/user.reducer';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { userReducer } from './src/store/reducers/user.reducer';
 import { Provider } from 'react-redux';
-import BackgroundTimer from 'react-native-background-timer';
-import PushNotification from 'react-native-push-notification';
+import SignupScreen from './src/screens/SignupScreen';
+import thunk from 'redux-thunk';
+import ProfileScreen from './src/screens/ProfileScreen';
+import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
+import { AppIconSize_Md, PrimaryColor } from './src/constants/Values';
+import { Dimensions } from 'react-native';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import { lectureReducer } from './src/store/reducers/lecture.reducer';
 
-const store = createStore(combineReducers({ userReducer: reducerName }));
+const store = createStore(combineReducers({ userReducer: userReducer , lectureReducer: lectureReducer }),applyMiddleware(thunk));
+
+const DrawerNavigator = createDrawerNavigator({
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      drawerLabel: 'Profile',
+      drawerIcon:()=><SimpleLineIcon name={'emotsmile'} color={PrimaryColor} size={AppIconSize_Md}/>
+    }
+  }
+}, {
+    drawerWidth: Dimensions.get('screen').width - 100,
+    drawerType: 'front',
+})
 
 const MainNavigator = createStackNavigator({
     Welcome: {
@@ -33,19 +53,31 @@ const MainNavigator = createStackNavigator({
         navigationOptions: {
             header: null,
         }
-    },
+  },
+  Signup: {
+    screen: SignupScreen,
+    navigationOptions: {
+      header:null
+    }
+  },
+  Profile: {
+    screen: DrawerNavigator,
+    navigationOptions: {
+      header: null
+    }
+  }
 }, { initialRouteName: 'Welcome' });
 const NavigetionStack = createAppContainer(MainNavigator);
 
 function App() {
-  BackgroundTimer.runBackgroundTimer(() => {
-    console.log('background');
-    PushNotification.localNotification({
-      message: 'Hello',
-      vibrate: false,
+  // BackgroundTimer.runBackgroundTimer(() => {
+  //   console.log('background');
+  //   PushNotification.localNotification({
+  //     message: 'Hello',
+  //     vibrate: false,
       
-    });
-  }, 5000);
+  //   });
+  // }, 5000);
   // const [myMacAddress, setMyMacAddress] = React.useState(0);
   // const press = () => {
   //   getMacAddress()
@@ -64,4 +96,4 @@ function App() {
   );
 }
 
-export default App;
+export default gestureHandlerRootHOC(App);

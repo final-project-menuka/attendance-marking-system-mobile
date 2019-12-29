@@ -2,44 +2,42 @@
 import React, { Component } from 'react';
 import { View, Text , SafeAreaView ,PermissionsAndroid , StyleSheet , Keyboard , Animated, Dimensions,TouchableWithoutFeedback } from 'react-native';
 import Imei from 'react-native-imei';
-import { getMacAddress } from 'react-native-device-info';
 import PrimaryButton from '../components/PrimaryButton';
 import StyledTextInput from '../components/StyledTextInput';
 import mainStyles, { dynamicHeight } from '../styles/MainStyleSheet';
 import StyledLogo from '../components/StyledLogo';
-import { withNavigation } from 'react-navigation';
+import Toast from 'react-native-simple-toast';
+import { connect } from 'react-redux';
+import { loginAction } from '../store/actions/user.action';
+import { login } from '../services/user.service';
 class LoginScreen extends Component {
   state = {
     imei: '',
     keyBoardShow: false,
-    fadeInAnim : new Animated.Value(0)
+    fadeInAnim: new Animated.Value(0),
+    Password: '',
+    email:''
   }
   constructor(props) {
     super(props);
-    this.checkDevicePermissions();
     this._keyboardShowEventListner = Keyboard.addListener('keyboardDidShow', this._keyboardShowEventListner);
     this._keyboardHideEventListner = Keyboard.addListener('keyboardDidHide', this._keyboardHideEventListner);
     this.test = new Animated.ValueXY({ x: -1, y: 450 });
-    console.log(this.props);
+    this.emailTextInputHandler = this.emailTextInputHandler.bind(this);
+    this.passwordTextInputHandler = this.passwordTextInputHandler.bind(this);
+    //console.log(this.props);
   }
   _keyboardShowEventListner = () => { this.setState({ keyBoardShow: true }); this.animateStart();}
   _keyboardHideEventListner = () => { this.setState({ keyBoardShow: false }); this.test = new Animated.ValueXY({x: -1 ,y: 450})}
   getImeiNumber = () => {
     Imei.getImei().then(imei => {
-      console.log(imei);
+      this.setState({ imei: imei[0] });
     }).catch(err => {
       console.log(err);
     });
-    getMacAddress().then(mac => console.log(mac)).catch(e => console.log(e));
   }
-  checkDevicePermissions = () => {
-    PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE).then(give => {
-      if (!give)
-        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE);
-    }).catch(e => {
-      console.log(e);
-      
-    })
+  componentDidMount() {
+    this.getImeiNumber();
   }
   animateStart = () => {
     Animated.spring(this.test,{toValue : {x:Dimensions.get('screen').width / 50 ,y: Dimensions.get('screen').height / 60},speed: 1,bounciness: 8 }).start()
@@ -48,8 +46,26 @@ class LoginScreen extends Component {
     this._keyboardHideEventListner.remove();
     this._keyboardShowEventListner.remove();
   }
+  emailTextInputHandler(input) {
+    this.setState({ email: input });
+  }
+  passwordTextInputHandler(input) {
+    this.setState({ Password: input });
+  }
+  loginButtonHandler = () => {
+    if (this.state.email.length < 2 || this.state.Password < 2 || this.state.imei.length < 1) {
+      Toast.show('Something Went Wrong', 5000);
+    } else {
+      login(this.state.email, this.state.imei, this.state.Password).then(async response => {
+        await this.props.login(response);
+        this.props.navigation.replace('Profile');
+      }).catch(err => {
+        console.log(err);
+        Toast.show(err.message, 7000);
+      });
+    }
+  }
   render() {
-    console.log(this.props);
       return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <SafeAreaView style={[mainStyles.fullSizeContainer,mainStyles.flexBox1,mainStyles.bgPrimary]}>
@@ -58,28 +74,32 @@ class LoginScreen extends Component {
                 <StyledLogo color={'white'}/>
               </View>
             }
-            <View style={[dynamicHeight(mainStyles.height25.height), !this.state.keyBoardShow ? loginScreenStyles.loginArea : { backgroundColor: 'white' }, mainStyles.alignItemsCenter, mainStyles.justifyContentCenter]}>
+            <View style={[dynamicHeight(mainStyles.height25.height), !this.state.keyBoardShow ? loginScreenStyles.loginArea : { backgroundColor: 'white' }, mainStyles.alignItemsCenter]}>
               <View style={loginScreenStyles.titleArea}>
                 {this.state.keyBoardShow &&
                    <Animated.View style={this.test.getLayout()}>
                     <StyledLogo color={'black'} />
                   </Animated.View>
                 }
-                <Text style={[mainStyles.textPrimary, loginScreenStyles.titleText]}>Login</Text>
               </View>
+              <Text style={[mainStyles.textPrimary, loginScreenStyles.titleText]}>Login</Text>
               <StyledTextInput
-                //onTouchStart={this.animateStart()}
-                isPassword={false}
+                transparent
+                isEmail={true}
                 isRounded
                 placeholder={'Type Email Address'}
+                keyboardType={'email-address'}
+                onChangeText={this.emailTextInputHandler}
               />
               <StyledTextInput
-                isPassword={false}
+                transparent
+                isPassword={true}
                 isRounded
-                placeholder={'Type Email Address'}
+                placeholder={'Type Your Password'}
+                onChangeText={this.passwordTextInputHandler}
               />
               <View style={loginScreenStyles.loginButtonContainer}>
-                <PrimaryButton onPress={()=> this.props.navigation.replace('Welcome')} text={'Login'} marginTop={Dimensions.get('screen').height / 40} />
+                <PrimaryButton onPress={this.loginButtonHandler} text={'Login'} marginTop={Dimensions.get('screen').height / 40} />
               </View>
             </View>
             </SafeAreaView>
@@ -90,19 +110,35 @@ class LoginScreen extends Component {
 const loginScreenStyles = StyleSheet.create({
   loginArea: {
     backgroundColor: 'white',
-    borderTopStartRadius: Dimensions.get('screen').width / 1.2,  
+    borderTopStartRadius: Dimensions.get('screen').width / 1.2,
   },
   titleText: {
     textAlign: 'center',
-    fontSize: Dimensions.get('screen').height / 20
+    fontSize: Dimensions.get('screen').height / 20,
+    marginTop: Dimensions.get('screen').width / 15
   },
   titleArea: {
     height: '30%',
+    justifyContent: 'flex-start',
+    // backgroundColor:'blue'
   },
   loginButtonContainer: {
     height: '30%',
     justifyContent: 'flex-start',
   }
-})
+});
+const mapStateToProps = (state) => {
+  return {
+    studentDetails: state.userReducer.loggedUser
+  }
+}
 
-export default LoginScreen;
+const mapDispatchToProps = dispatch=>{
+  return {
+    login: studentDetails => {
+      dispatch(loginAction(studentDetails));
+    }
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps) (LoginScreen);

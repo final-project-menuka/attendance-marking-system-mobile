@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { StyleSheet, Dimensions } from 'react-native';
-import { PrimaryColor } from '../constants/Values';
+import { PrimaryColor, AppFontSize } from '../constants/Values';
 
 const styles = StyleSheet.create({
     fullSizeContainer: {
@@ -34,7 +34,25 @@ const styles = StyleSheet.create({
     },
     bgWhite: {
         backgroundColor:'white'
-    }
+    },
+    nintyPerCent: {
+        height:'90%'
+    },
+    tenPercent: {
+        height:'10%'
+    },
+    justifyContentFlexStart: {
+        justifyContent:'flex-start'
+    },
+    fullWidth: {
+        width : Dimensions.get('screen').width
+    },
+    txtBold: {
+        fontWeight:'bold',
+    },
+    appFontSize: {
+        fontSize: AppFontSize
+    },
 });
 
 export const dynamicHeight = (style) =>{
