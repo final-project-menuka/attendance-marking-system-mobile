@@ -39,7 +39,7 @@ const WelcomeScreen = props => {
                 <StyledLogo color={PrimaryColor}/>
             </Animated.View>
             <View style={[MainStyleSheet.alignItemsCenter,MainStyleSheet.justifyContentCenter]}>
-                <PrimaryButton onPress={()=> props.navigation.navigate('Login')} marginTop={Dimensions.get('screen').height / 50} text={'Login'} />
+                <PrimaryButton onPress={()=> props.navigation.replace('Login')} marginTop={Dimensions.get('screen').height / 50} text={'Login'} />
                 <SecondaryButton onPress={()=> props.navigation.navigate('Signup')} marginTop={Dimensions.get('screen').height / 90} text={'Signup'}/>
             </View>
         </SafeAreaView>

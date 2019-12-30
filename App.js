@@ -14,17 +14,19 @@ import {createAppContainer } from 'react-navigation';
 import LoginScreen from './src/screens/LoginScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator , DrawerItems} from 'react-navigation-drawer';
 import { userReducer } from './src/store/reducers/user.reducer';
 import { Provider } from 'react-redux';
 import SignupScreen from './src/screens/SignupScreen';
 import thunk from 'redux-thunk';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import { AppIconSize_Md, PrimaryColor } from './src/constants/Values';
+import { PrimaryColor, AppFontSize } from './src/constants/Values';
 import { Dimensions } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { lectureReducer } from './src/store/reducers/lecture.reducer';
+import { SafeAreaView, ScrollView } from 'react-native';
+import StyledLogo from './src/components/StyledLogo';
 
 const store = createStore(combineReducers({ userReducer: userReducer , lectureReducer: lectureReducer }),applyMiddleware(thunk));
 
@@ -33,12 +35,29 @@ const DrawerNavigator = createDrawerNavigator({
     screen: ProfileScreen,
     navigationOptions: {
       drawerLabel: 'Profile',
-      drawerIcon:()=><SimpleLineIcon name={'emotsmile'} color={PrimaryColor} size={AppIconSize_Md}/>
+      drawerIcon:()=><SimpleLineIcon name={'emotsmile'} color={PrimaryColor} size={AppFontSize}/>
     }
   }
 }, {
     drawerWidth: Dimensions.get('screen').width - 100,
     drawerType: 'front',
+    contentOptions: {
+      iconStyle: {
+        width: '80%'
+      },
+      labelStyle: {
+        fontSize: AppFontSize,
+        width: '30%'
+      }
+    },
+    contentComponent: props => (
+      <SafeAreaView>
+        <StyledLogo color={'black'} />
+        <ScrollView>
+          <DrawerItems {...props} />
+        </ScrollView>
+      </SafeAreaView>
+    )
 })
 
 const MainNavigator = createStackNavigator({

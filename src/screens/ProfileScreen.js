@@ -41,6 +41,12 @@ class ProfileScreen extends Component{
         });
     }
     checkStudentAvailable = () => {
+        console.log({
+            mac: this.state.macAddress,
+            batch: this.props.student.batch,
+            course: this.props.onGoingLecture.module_code,
+            id: this.props.student.nsbm_id
+        });
         BackgroundTimer.runBackgroundTimer(async () => {
             await getMacAddress().then(mac => {
                 this.setState({
@@ -50,15 +56,24 @@ class ProfileScreen extends Component{
             }).catch(e => console.log(e));
             checkStudentAvailabe(this.state.macAddress, this.props.student.nsbm_id, this.props.onGoingLecture.module_code).then(_ => {
                 BackgroundTimer.stopBackgroundTimer();
-            }).catch(e => {
-                PushNotification.localNotification({
-                    message: 'You Left Early',
-                    title: 'You Left Early',
-                    vibrate: false
-                });
+            }).catch(async e => {
+                console.log(e);
+                await this.sendNotification();
                 console.log('hello timer');
+                BackgroundTimer.stopBackgroundTimer();
             });
-        }, 5 * 60 *1000 /*180 * 60 * 1000*/);
+        }, 2 * 60 *1000 /*180 * 60 * 1000*/);
+    }
+    sendNotification = () => {
+        return new Promise(async (resolve, reject) => {
+            console.log('notification triggers')
+            PushNotification.localNotification({
+                message: 'You Left Early',
+                title: 'You Left Early',
+                vibrate: false
+            });
+            resolve('Send');
+        })
     }
     render() {
         return (
