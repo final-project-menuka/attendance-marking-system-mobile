@@ -61,14 +61,14 @@ class SignupScreen extends Component{
                     }
                     <View style={[dynamicHeight(MainStyleSheet.height25.height), MainStyleSheet.alignItemsCenter]}>
                         {this.state.isKeyboardShow &&
-                            <Animated.View style={[{ opacity: this.logoOpacityAnimation},signupScreenStyles.fadingAnimatedLogoArea]}>
+                            <Animated.View style={[{ opacity: this.logoOpacityAnimation},signupScreenStyles.fadingAnimatedLogoArea,MainStyleSheet.justifyContentFlexStart]}>
                                 <StyledLogo color={PrimaryColor}/>
                             </Animated.View>
                         }
-                        <View style={signupScreenStyles.titleArea}>
+                        <View style={[signupScreenStyles.titleArea,MainStyleSheet.jsutifyContentFlexEnd,MainStyleSheet.alignItemsCenter]}>
                             <Text style={signupScreenStyles.titleStyles}>Let's Get Started</Text>
                         </View>
-                        <View style={signupScreenStyles.loginTextFieldsArea}>
+                        <View style={[signupScreenStyles.loginTextFieldsArea,MainStyleSheet.justifyContentCenter]}>
                             <StyledTextInput
                                 isRounded={true}
                                 email
@@ -116,20 +116,16 @@ const signupScreenStyles = StyleSheet.create({
     },
     titleArea: {
         height: Dimensions.get('screen').height / 6,
-        justifyContent: 'flex-end',
         width: Dimensions.get('screen').width,
-        alignItems: 'center'
     },
     loginTextFieldsArea: {
         height: '30%',
-        justifyContent: 'center'
     },
     loginButtonArea: {
         height: '40%'
     },
     fadingAnimatedLogoArea: {
         height: '10%',
-        justifyContent: 'flex-start'
     }
 })
 export default SignupScreen;

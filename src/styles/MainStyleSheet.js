@@ -53,6 +53,27 @@ const styles = StyleSheet.create({
     appFontSize: {
         fontSize: AppFontSize
     },
+    heightThirtyPercent: {
+        height:'30%'
+    },
+    samllContainer: {
+        height: Dimensions.get('screen').height / 8
+    },
+    flexDirectionRow: {
+        flexDirection:'row'
+    },
+    jsutifyContentFlexEnd: {
+        justifyContent:'flex-end'
+    },
+    shadow: {
+        elevation: 10,
+        shadowOpacity: 2,
+        shadowOffset: { height: 0, width: 0 },
+        shadowRadius: 2,
+    },
+    fiftyPercentWidth: {
+        width:'50%'
+    }
 });
 
 export const dynamicHeight = (style) =>{

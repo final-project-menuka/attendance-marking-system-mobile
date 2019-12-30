@@ -1,6 +1,7 @@
+/* eslint-disable no-spaced-func */
 /* eslint-disable prettier/prettier */
 import React, { Component } from 'react';
-import { View, Text , SafeAreaView ,PermissionsAndroid , StyleSheet , Keyboard , Animated, Dimensions,TouchableWithoutFeedback } from 'react-native';
+import { View, Text , SafeAreaView , StyleSheet , Keyboard , Animated, Dimensions,TouchableWithoutFeedback } from 'react-native';
 import Imei from 'react-native-imei';
 import PrimaryButton from '../components/PrimaryButton';
 import StyledTextInput from '../components/StyledTextInput';
@@ -9,14 +10,15 @@ import StyledLogo from '../components/StyledLogo';
 import Toast from 'react-native-simple-toast';
 import { connect } from 'react-redux';
 import { loginAction } from '../store/actions/user.action';
-import { login } from '../services/user.service';
+import { loadTimeTable } from '../store/actions/lecture.actions';
+import { login , loadTodayTimeTable } from '../services/user.service';
 class LoginScreen extends Component {
   state = {
     imei: '',
     keyBoardShow: false,
     fadeInAnim: new Animated.Value(0),
     Password: '',
-    email:''
+    email:'',
   }
   constructor(props) {
     super(props);
@@ -28,7 +30,7 @@ class LoginScreen extends Component {
     //console.log(this.props);
   }
   _keyboardShowEventListner = () => { this.setState({ keyBoardShow: true }); this.animateStart();}
-  _keyboardHideEventListner = () => { this.setState({ keyBoardShow: false }); this.test = new Animated.ValueXY({x: -1 ,y: 450})}
+  _keyboardHideEventListner = () => { this.setState({ keyBoardShow: false }); this.test = new Animated.ValueXY({ x: -1, y: 450 });}
   getImeiNumber = () => {
     Imei.getImei().then(imei => {
       this.setState({ imei: imei[0] });
@@ -40,7 +42,7 @@ class LoginScreen extends Component {
     this.getImeiNumber();
   }
   animateStart = () => {
-    Animated.spring(this.test,{toValue : {x:Dimensions.get('screen').width / 50 ,y: Dimensions.get('screen').height / 60},speed: 1,bounciness: 8 }).start()
+    Animated.spring(this.test, { toValue: { x: Dimensions.get('screen').width / 50, y: Dimensions.get('screen').height / 60 }, speed: 1, bounciness: 8 }).start();
   }
   componentWillUnmount() {
     this._keyboardHideEventListner.remove();
@@ -58,6 +60,7 @@ class LoginScreen extends Component {
     } else {
       login(this.state.email, this.state.imei, this.state.Password).then(async response => {
         await this.props.login(response);
+        await loadTodayTimeTable().then(async timeTable => this.props.loadTimeTable(timeTable)).catch(e => console.log(e));
         this.props.navigation.replace('Profile');
       }).catch(err => {
         console.log(err);
@@ -75,7 +78,7 @@ class LoginScreen extends Component {
               </View>
             }
             <View style={[dynamicHeight(mainStyles.height25.height), !this.state.keyBoardShow ? loginScreenStyles.loginArea : { backgroundColor: 'white' }, mainStyles.alignItemsCenter]}>
-              <View style={loginScreenStyles.titleArea}>
+              <View style={[mainStyles.heightThirtyPercent , mainStyles.justifyContentFlexStart]}>
                 {this.state.keyBoardShow &&
                    <Animated.View style={this.test.getLayout()}>
                     <StyledLogo color={'black'} />
@@ -98,7 +101,7 @@ class LoginScreen extends Component {
                 placeholder={'Type Your Password'}
                 onChangeText={this.passwordTextInputHandler}
               />
-              <View style={loginScreenStyles.loginButtonContainer}>
+              <View style={[mainStyles.justifyContentFlexStart , mainStyles.heightThirtyPercent]}>
                 <PrimaryButton onPress={this.loginButtonHandler} text={'Login'} marginTop={Dimensions.get('screen').height / 40} />
               </View>
             </View>
@@ -115,30 +118,22 @@ const loginScreenStyles = StyleSheet.create({
   titleText: {
     textAlign: 'center',
     fontSize: Dimensions.get('screen').height / 20,
-    marginTop: Dimensions.get('screen').width / 15
+    marginTop: Dimensions.get('screen').width / 15,
   },
-  titleArea: {
-    height: '30%',
-    justifyContent: 'flex-start',
-    // backgroundColor:'blue'
-  },
-  loginButtonContainer: {
-    height: '30%',
-    justifyContent: 'flex-start',
-  }
 });
 const mapStateToProps = (state) => {
   return {
-    studentDetails: state.userReducer.loggedUser
-  }
-}
+    studentDetails: state.userReducer.loggedUser,
+  };
+};
 
-const mapDispatchToProps = dispatch=>{
+const mapDispatchToProps = dispatch => {
   return {
     login: studentDetails => {
       dispatch(loginAction(studentDetails));
-    }
-  }
-}
+    },
+    loadTimeTable: timeTable => dispatch(loadTimeTable(timeTable)),
+  };
+};
 
 export default connect(mapStateToProps,mapDispatchToProps) (LoginScreen);

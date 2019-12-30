@@ -5,12 +5,12 @@ const RoundedButtonContainer = styled.TouchableOpacity`
     height: ${props => props.size};
     width: ${props => props.size};
     background-color: ${props => props.bgColor};
-    border-radius : ${props=> props.size /2};
+    border-radius : ${props => props.size / 2};
     justify-content: center;
     align-items: center;
-`
+`;
 const StyledRoundedButton = props => (
-    <RoundedButtonContainer onPress={props.onPress} size={props.size} bgColor={props.bgColor}>
+    <RoundedButtonContainer disabled={props.disabled} onPress={props.onPress} size={props.size} bgColor={props.bgColor}>
         {props.children}
     </RoundedButtonContainer>
 );

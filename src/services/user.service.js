@@ -2,7 +2,7 @@
 import { BASE_URL } from '../constants/Values';
 export async function signUp(studentId,email,password,imei) {
     if (studentId !== null && email !== null && password !== null) {
-        return fetch('http://10.0.3.2:8000/api/student/sign-up', {
+        return fetch(`${BASE_URL}student/sign-up`, {
             method: 'POST',
             body: JSON.stringify({
                 id: studentId,
@@ -110,5 +110,49 @@ export async function checkStudentAvailabe(macAddress, id, moduleCode) {
         }
     }).catch(err => {
         throw err
+    })
+}
+
+export async function loadTodayTimeTable() {
+    return fetch(`${BASE_URL}student/today-time-table`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        credentials:'same-origin'
+    }).then(response => {
+        if (response.ok)
+            return response.json();
+        else {
+            if (response.status === 400)
+                throw new Error('Today is a holiday');
+            else
+                throw new Error('Something Went Wrong');
+        }
+    }).catch(err => {
+        throw err;
+    })
+}
+export async function retryAttendance(macAddress,moduleCode,id) {
+    return fetch(`${BASE_URL}student/rollback-attendance`, {
+        method: 'POST',
+        body: JSON.stringify({
+            macAddress: macAddress,
+            id: id,
+            moduleCode: moduleCode
+        }),
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        }
+    }).then(response => {
+        if (response.ok)
+            return response.json();
+        else
+            throw new Error('You are not in the valied LECTURE HALL');
+    }).catch(err => {
+        throw err;
     })
 }
