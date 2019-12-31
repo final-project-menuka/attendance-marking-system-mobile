@@ -53,7 +53,8 @@ class ProfileScreen extends Component{
                 });
                 console.log(mac);
             }).catch(e => console.log(e));
-            checkStudentAvailabe(this.state.macAddress, this.props.student.nsbm_id, this.props.onGoingLecture.module_code).then(_ => {
+            checkStudentAvailabe(this.state.macAddress, this.props.student.nsbm_id, this.props.onGoingLecture.module_code).then(res => {
+                console.log(res);
                 BackgroundTimer.stopBackgroundTimer();
             }).catch(async e => {
                 console.log(e);
@@ -61,18 +62,22 @@ class ProfileScreen extends Component{
                 console.log('hello timer');
                 BackgroundTimer.stopBackgroundTimer();
             });
-        }, 2 * 60 *1000 /*180 * 60 * 1000*/);
+        }, 3 * 60 *1000 /*180 * 60 * 1000*/);
     }
     sendNotification = () => {
         return new Promise(async (resolve, reject) => {
             console.log('notification triggers')
-            PushNotification.localNotification({
+            try {
+                PushNotification.localNotification({
                 message: 'You Left Early',
                 title: 'You Left Early',
                 vibrate: false
             });
             this.setState({ retry: false });
-            resolve('Send');
+                resolve('Send');
+            } catch (e) {
+                reject(e);
+            }
         });
     }
     resendAttendance = ()=>{
@@ -80,7 +85,7 @@ class ProfileScreen extends Component{
             this.setState({ retry: false });
         }).catch(e => {
             Alert.alert('Warning', e.message);
-        })
+        });
     }
     render() {
         return (
