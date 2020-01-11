@@ -28,6 +28,7 @@ import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
 import StyledLogo from './src/components/StyledLogo';
 import TimetableScreen from './src/screens/TimetableScreen';
 import MainStyleSheet from './src/styles/MainStyleSheet';
+import LogoutScreen from './src/screens/LogoutScreen';
 
 const store = createStore(combineReducers({ userReducer: userReducer , lectureReducer: lectureReducer }),applyMiddleware(thunk));
 
@@ -46,6 +47,13 @@ const DrawerNavigator = createDrawerNavigator({
       drawerIcon:()=> <SimpleLineIcon name={'note'} color={SecondaryColor} size={AppFontSize}/>
     },
   },
+  Logout: {
+    screen: LogoutScreen,
+    navigationOptions: {
+      drawerLabel: 'Logout',
+      drawerIcon:()=> <SimpleLineIcon name={'logout'} color={PrimaryColor} size={AppFontSize}/>
+    }
+  }
 }, {
   drawerWidth: Dimensions.get('screen').width - 100,
   drawerType: 'front',

@@ -1,7 +1,7 @@
 /* eslint-disable no-spaced-func */
 /* eslint-disable prettier/prettier */
 import React, { Component } from 'react';
-import { View, Text , SafeAreaView , StyleSheet , Keyboard , Animated, Dimensions,TouchableWithoutFeedback } from 'react-native';
+import { View, Text , SafeAreaView , StyleSheet , Keyboard , Animated, Dimensions,TouchableWithoutFeedback , ActivityIndicator } from 'react-native';
 import Imei from 'react-native-imei';
 import PrimaryButton from '../components/PrimaryButton';
 import StyledTextInput from '../components/StyledTextInput';
@@ -71,7 +71,7 @@ class LoginScreen extends Component {
   render() {
       return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <SafeAreaView style={[mainStyles.fullSizeContainer,mainStyles.flexBox1,mainStyles.bgPrimary]}>
+          <SafeAreaView style={[mainStyles.fullSizeContainer, mainStyles.flexBox1, mainStyles.bgPrimary]}>
             {!this.state.keyBoardShow &&
               <View style={[mainStyles.height25, mainStyles.alignItemsCenter, mainStyles.justifyContentCenter]}>
                 <StyledLogo color={'white'}/>
