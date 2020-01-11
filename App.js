@@ -9,7 +9,6 @@
 
 import React from 'react';
 import { createStore,combineReducers, applyMiddleware } from 'redux';
-//import MainNavigator from './src/screens/LoginScreen';
 import {createAppContainer } from 'react-navigation';
 import LoginScreen from './src/screens/LoginScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
@@ -25,7 +24,7 @@ import { PrimaryColor, AppFontSize, SecondaryColor } from './src/constants/Value
 import { Dimensions } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { lectureReducer } from './src/store/reducers/lecture.reducer';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
 import StyledLogo from './src/components/StyledLogo';
 import TimetableScreen from './src/screens/TimetableScreen';
 import MainStyleSheet from './src/styles/MainStyleSheet';
@@ -98,25 +97,9 @@ const MainNavigator = createStackNavigator({
 const NavigetionStack = createAppContainer(MainNavigator);
 
 function App() {
-  // BackgroundTimer.runBackgroundTimer(() => {
-  //   console.log('background');
-  //   PushNotification.localNotification({
-  //     message: 'Hello',
-  //     vibrate: false,
-  //   });
-  // }, 5000);
-  // const [myMacAddress, setMyMacAddress] = React.useState(0);
-  // const press = () => {
-  //   getMacAddress()
-  //     .then(macAddress => {
-  //       setMyMacAddress(macAddress);
-  //     })
-  //     .catch(err => {
-  //       alert(err.message);
-  //     });
-  // };
   return (
     <Provider store={store}>
+          <StatusBar backgroundColor={PrimaryColor} barStyle={'light-content'}/>
           <NavigetionStack/>
     </Provider>
   );

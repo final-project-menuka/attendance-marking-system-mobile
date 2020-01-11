@@ -46,6 +46,9 @@ class TimetableScreen extends Component{
                 <View style={[timeTableScreenStyles.subjectDetailsContainer,MainStyleSheet.alignItemsCenter]}>
                     <Text style={[MainStyleSheet.txtBold , timeTableScreenStyles.txtWhite]}>{subject.module_code}</Text>
                 </View>
+                <View style={[timeTableScreenStyles.subjectDetailsContainer,MainStyleSheet.alignItemsCenter]}>
+                    <Text style={[MainStyleSheet.txtBold , timeTableScreenStyles.txtWhite]}>{subject.module_name}</Text>
+                </View>
             </View>
         );
     }
@@ -87,7 +90,7 @@ const timeTableScreenStyles = StyleSheet.create({
         borderLeftWidth: 5,
     },
     subjectDetailsContainer: {
-        width: Dimensions.get('screen').width / 3
+        width: Dimensions.get('screen').width / 4,
     },
     txtWhite: {
         color: 'white',
